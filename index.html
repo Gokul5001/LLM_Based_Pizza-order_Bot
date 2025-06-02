@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Order Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom scrollbar for chat */
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        /* Animation for messages */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="flex items-center justify-center mb-8">
+            <div class="bg-red-600 p-3 rounded-full mr-4">
+                <i class="fas fa-pizza-slice text-white text-2xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800">Pizza Order Bot</h1>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+            <div class="p-4 bg-gradient-to-r from-red-600 to-red-500">
+                <h2 class="text-white font-semibold flex items-center">
+                    <i class="fas fa-robot mr-2"></i> PizzaBot Assistant
+                </h2>
+            </div>
+            <div class="chat-container h-96 p-4 overflow-y-auto bg-gray-50" id="chat-container">
+                <!-- Messages will appear here -->
+                <div class="message bot-message mb-4 flex">
+                    <div class="flex-shrink-0 mr-3">
+                        <div class="bg-red-100 h-8 w-8 rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-red-600"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm p-3 max-w-xs md:max-w-md lg:max-w-lg">
+                        <p class="text-gray-800">Hello! Welcome to our pizza restaurant. What would you like to order today?</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-200 bg-white">
+                <div class="flex space-x-2">
+                    <input type="text" id="user-input" placeholder="Type your message here..." 
+                           class="flex-grow px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <button id="send-button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition duration-200 flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Send
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <button id="get-summary" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-lg transition duration-200 flex items-center justify-center">
+                <i class="fas fa-receipt mr-2"></i> Get Order Summary
+            </button>
+            <button id="reset-chat" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg transition duration-200 flex items-center justify-center">
+                <i class="fas fa-redo mr-2"></i> Reset Conversation
+            </button>
+        </div>
+        
+        <div class="summary bg-amber-50 rounded-xl shadow-sm p-4 border border-amber-200 hidden" id="summary-container">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-amber-800 flex items-center">
+                    <i class="fas fa-file-invoice-dollar mr-2"></i> Order Summary
+                </h3>
+                <button id="close-summary" class="text-amber-600 hover:text-amber-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="bg-white p-3 rounded-lg overflow-x-auto">
+                <pre id="summary-content" class="text-sm text-gray-700 whitespace-pre-wrap"></pre>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            <p>© 2023 PizzaBot. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const getSummaryButton = document.getElementById('get-summary');
+        const resetChatButton = document.getElementById('reset-chat');
+        const summaryContainer = document.getElementById('summary-container');
+        const summaryContent = document.getElementById('summary-content');
+        const closeSummaryButton = document.getElementById('close-summary');
+        
+        // Handle send button click
+        sendButton.addEventListener('click', sendMessage);
+        
+        // Handle Enter key in input field
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Handle get summary button
+        getSummaryButton.addEventListener('click', getOrderSummary);
+        
+        // Handle reset chat button
+        resetChatButton.addEventListener('click', resetConversation);
+        
+        // Handle close summary button
+        closeSummaryButton.addEventListener('click', () => {
+            summaryContainer.classList.add('hidden');
+        });
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                addUserMessage(message);
+                userInput.value = '';
+                
+                // Simulate bot typing
+                const typingIndicator = addTypingIndicator();
+                
+                // Send to server
+                fetch('http://localhost:5000/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    removeTypingIndicator(typingIndicator);
+                    addBotMessage(data.response);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    removeTypingIndicator(typingIndicator);
+                    addBotMessage("Sorry, I'm having trouble connecting to the server. Please try again later.");
+                });
+            }
+        }
+        
+        function getOrderSummary() {
+            summaryContainer.classList.remove('hidden');
+            summaryContent.textContent = "Loading your order summary...";
+            
+            fetch('http://localhost:5000/summary')
+                .then(response => response.json())
+                .then(data => {
+                    summaryContent.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    summaryContent.textContent = "Could not get order summary. Please try again.";
+                });
+        }
+        
+        function resetConversation() {
+            fetch('http://localhost:5000/reset', {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(() => {
+                chatContainer.innerHTML = '';
+                summaryContainer.classList.add('hidden');
+                addBotMessage("Hello! Welcome to our pizza restaurant. What would you like to order today?");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function addUserMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message mb-4 flex justify-end';
+            messageDiv.innerHTML = `
+                <div class="flex flex-col items-end max-w-xs md:max-w-md lg:max-w-lg">
+                    <div class="bg-red-100 rounded-lg shadow-sm p-3">
+                        <p class="text-gray-800">${message}</p>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">Just now</div>
+                </div>
+                <div class="flex-shrink-0 ml-3">
+                    <div class="bg-red-600 h-8 w-8 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function addBotMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message mb-4 flex';
+            messageDiv.innerHTML = `
+                <div class="flex-shrink-0 mr-3">
+                    <div class="bg-red-100 h-8 w-8 rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-red-600"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-3 max-w-xs md:max-w-md lg:max-w-lg">
+                    <p class="text-gray-800">${message}</p>
+                    <div class="text-xs text-gray-500 mt-1">Just now</div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function addTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message mb-4 flex';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="flex-shrink-0 mr-3">
+                    <div class="bg-red-100 h-8 w-8 rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-red-600"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-3 max-w-xs md:max-w-md lg:max-w-lg">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return typingDiv;
+        }
+        
+        function removeTypingIndicator(typingElement) {
+            if (typingElement && typingElement.parentNode) {
+                typingElement.parentNode.removeChild(typingElement);
+            }
+        }
+    </script>
+</body>
+</html>
