@@ -1,8 +1,4 @@
-# Project Title
-
-A concise, one‐line description of what your project does.
-
----
+# PIZZA ORDER BOT
 
 ## Table of Contents
 
