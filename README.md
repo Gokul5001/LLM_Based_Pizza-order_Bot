@@ -2,8 +2,12 @@
 
 A conversational pizza ordering system powered by a large language model (LLM). This repository contains a Flask-based backend (`orderbot.py`) that interacts with OpenAI’s API to manage conversations, and a simple Node.js server (`server.js`) to serve the front-end (`index.html`). The bot greets users, collects their pizza orders, asks for pickup or delivery details, summarizes the order, and processes payment information.
 
-![image](https://github.com/user-attachments/assets/3e3449c5-2718-4c3c-91c1-72a514ac5fc1)
 
+## Screenshot
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/3e3449c5-2718-4c3c-91c1-72a514ac5fc1" alt="Pizza Bot App Screenshot" width="600"/>
+</div>
 
 ## Table of Contents
 
