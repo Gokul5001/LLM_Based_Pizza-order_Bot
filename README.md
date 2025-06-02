@@ -1,69 +1,70 @@
-# PIZZA ORDER BOT
+# Pizza Order Bot
 
-## Table of Contents
-
-1. [Overview](#overview)  
-2. [Features](#features)  
-3. [Tech Stack](#tech-stack)  
-4. [Prerequisites](#prerequisites)  
-5. [Installation](#installation)  
-6. [Configuration](#configuration)  
-7. [Usage](#usage)  
-8. [API Endpoints](#api-endpoints)  
-9. [Project Structure](#project-structure)  
-10. [Contributing](#contributing)  
-11. [Testing](#testing)  
-12. [Deployment](#deployment)  
-13. [Troubleshooting](#troubleshooting)  
-14. [Roadmap](#roadmap)  
-15. [License](#license)  
-16. [Contact](#contact)  
+A conversational pizza ordering system powered by a large language model (LLM). This repository contains a Flask-based backend (`orderbot.py`) that interacts with OpenAI’s API to manage conversations, and a simple Node.js server (`server.js`) to serve the front-end (`index.html`). The bot greets users, collects their pizza orders, asks for pickup or delivery details, summarizes the order, and processes payment information.
 
 ---
 
-## Overview
+## Table of Contents
 
-Provide a brief overview of the project:
+* [Features](#features)
+* [Prerequisites](#prerequisites)
+* [Project Structure](#project-structure)
+* [Installation](#installation)
 
-- **Purpose**: Why does this project exist?  
-- **Goals**: What problems does it solve?  
-- **Audience**: Who will benefit from it?
+  * [1. Clone the Repository](#1-clone-the-repository)
+  * [2. Backend Setup (Flask)](#2-backend-setup-flask)
+  * [3. Frontend Setup (Node.js)](#3-frontend-setup-nodejs)
+* [Configuration](#configuration)
+* [Usage](#usage)
+
+  * [Starting the Flask Server](#starting-the-flask-server)
+  * [Starting the Node Server](#starting-the-node-server)
+  * [Interacting with the Bot](#interacting-with-the-bot)
+  * [Endpoints](#endpoints)
+* [Environment Variables](#environment-variables)
+* [Customization](#customization)
+* [Troubleshooting](#troubleshooting)
+* [Contributing](#contributing)
+* [License](#license)
 
 ---
 
 ## Features
 
-List the key features and functionalities:
-
-- Feature 1: Brief description.  
-- Feature 2: Brief description.  
-- Feature 3: Brief description.  
-- …
-
----
-
-## Tech Stack
-
-Outline the technologies, frameworks, and libraries used:
-
-- **Backend**: Flask (Python), Express (Node.js), Django, etc.  
-- **Frontend**: React, Vue.js, Tailwind CSS, etc.  
-- **Database**: PostgreSQL, MongoDB, MySQL, etc.  
-- **DevOps/Infrastructure**: Docker, Kubernetes, AWS, etc.  
-- **APIs/Integrations**: OpenAI, Stripe, Twilio, etc.  
-- **Testing**: pytest, Jest, Mocha, etc.
+* **Natural Language Ordering**
+  The bot uses OpenAI’s Chat API (e.g., `gpt-3.5-turbo`) to understand and respond in a conversational style.
+* **Menu Clarification**
+  Automatically asks for size, toppings, and extras to uniquely identify each pizza or side.
+* **Pickup vs. Delivery**
+  Prompts the user to specify pickup or delivery. If delivery is chosen, collects the address.
+* **Order Summary**
+  Provides a JSON-formatted summary that itemizes pizzas (with sizes), toppings, drinks (with sizes), sides (with sizes), and total price.
+* **Reset Conversation**
+  Allows resetting the entire context so a new customer can start fresh.
 
 ---
 
 ## Prerequisites
 
-List any system requirements and dependencies:
+* **Python 3.7+** (with `pip`)
+* **Node.js 14+** and **npm**
+* An **OpenAI API Key**
+* Basic familiarity with Flask, Express, and environment variables
 
-1. **Node.js** (v14 or higher)  
-2. **Python** (v3.7 or higher)  
-3. **npm** / **yarn**  
-4. **pip**  
-5. Environment variables (see [Configuration](#configuration))  
+---
+
+## Project Structure
+
+```
+.
+├── orderbot.py       # Flask app that handles chat, summary, and reset endpoints
+├── server.js         # Express server to serve the front-end files
+├── index.html        # Front-end UI for interacting with the pizza bot
+├── .env              # Environment variables (not committed)
+├── package.json      # Node.js dependencies for server.js
+├── requirements.txt  # Python dependencies for orderbot.py
+└── README.md         # This file
+```
 
 ---
 
@@ -72,497 +73,286 @@ List any system requirements and dependencies:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
-
+git clone https://github.com/your-username/pizza-order-bot.git
+cd pizza-order-bot
+```
 
-2. Backend Setup
-Navigate to the backend folder:
-
-bash
-Copy
-cd backend
-(Optional) Create and activate a virtual environment:
-
-bash
-Copy
-python3 -m venv venv
-source venv/bin/activate      # macOS/Linux
-.\venv\Scripts\activate       # Windows
-Install Python dependencies:
+### 2. Backend Setup (Flask)
 
-bash
-Copy
-pip install -r requirements.txt
-Copy the example environment file and configure:
-
-bash
-Copy
-cp .env.example .env
-# Edit .env and set the required variables (API keys, database URL, etc.)
-Start the backend server:
-
-bash
-Copy
-python app.py
-By default, it will run on http://localhost:5000.
-
-3. Frontend Setup
-Open a new terminal and navigate to the frontend folder:
-
-bash
-Copy
-cd ../frontend
-Install Node dependencies:
-
-bash
-Copy
-npm install
-# or
-yarn install
-(Optional) Copy and configure .env:
-
-bash
-Copy
-cp .env.example .env
-# Edit .env to set API base URLs, feature flags, etc.
-Start the frontend development server:
-
-bash
-Copy
-npm start
-# or
-yarn start
-By default, it will run on http://localhost:3000.
-
-Configuration
-Explain which environment variables or configuration files are required.
-
-Environment Variables (example in backend/.env.example):
-
-env
-Copy
-# Flask settings
-FLASK_APP=app.py
-FLASK_ENV=development
-
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-
-# Third‐party APIs
-OPENAI_API_KEY=your_openai_key
-STRIPE_SECRET_KEY=your_stripe_key
-Frontend .env.example (if applicable):
-
-env
-Copy
-REACT_APP_API_BASE_URL=http://localhost:5000
-REACT_APP_FEATURE_FLAG_X=true
-Usage
-Provide instructions on how to use the application once it’s running.
-
-Open your browser and navigate to http://localhost:3000.
-
-Sign up or log in using your credentials.
-
-Navigate through the dashboard to access key functionalities:
-
-Order Page: Browse products and add to cart.
-
-Cart & Checkout: Review items, apply coupon codes, and complete payment.
-
-Profile: Update personal information and view order history.
-
-(Backend) To test an endpoint via cURL or Postman, for example:
-
-bash
-Copy
-curl -X POST http://localhost:5000/api/v1/orders \
-     -H "Content-Type: application/json" \
-     -d '{"userId": 123, "items": [{"id": 1, "quantity": 2}]}'
-API Endpoints
-List the primary API routes, HTTP methods, and payload formats.
-
-Authentication
-POST /api/v1/auth/register
-
-Description: Create a new user account.
-
-Body:
-
-json
-Copy
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-Response:
-
-json
-Copy
-{
-  "userId": 123,
-  "token": "jwt_token_here"
-}
-POST /api/v1/auth/login
-
-Description: Authenticate a user and issue a JWT.
-
-Body:
-
-json
-Copy
-{
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-Response:
-
-json
-Copy
-{
-  "token": "jwt_token_here"
-}
-Orders
-GET /api/v1/orders
-
-Description: Retrieve all orders for the authenticated user.
-
-Headers:
-
-makefile
-Copy
-Authorization: Bearer <token>
-Response:
-
-json
-Copy
-[
-  {
-    "orderId": 456,
-    "items": [
-      { "productId": 1, "quantity": 2, "price": 12.95 }
-    ],
-    "total": 25.90,
-    "status": "Processing",
-    "createdAt": "2025-06-02T10:15:30Z"
-  },
-  ...
-]
-POST /api/v1/orders
-
-Description: Create a new order.
-
-Headers:
-
-makefile
-Copy
-Authorization: Bearer <token>
-Body:
-
-json
-Copy
-{
-  "items": [
-    { "productId": 1, "quantity": 2 },
-    { "productId": 3, "quantity": 1 }
-  ],
-  "deliveryAddress": "123 Main St, Anytown, USA",
-  "paymentMethod": "credit_card"
-}
-Response:
-
-json
-Copy
-{
-  "orderId": 789,
-  "status": "PendingPayment",
-  "total": 36.85
-}
-Products
-GET /api/v1/products
-
-Description: Fetch a list of available products or menu items.
-
-Response:
-
-json
-Copy
-[
-  {
-    "id": 1,
-    "name": "Pepperoni Pizza",
-    "sizes": ["small", "medium", "large"],
-    "prices": { "small": 7.00, "medium": 10.00, "large": 12.95 },
-    "toppings": ["extra cheese", "mushrooms", "sausage"]
-  },
-  ...
-]
-GET /api/v1/products/:id
-
-Description: Get detailed information for a single product.
-
-Response:
-
-json
-Copy
-{
-  "id": 1,
-  "name": "Pepperoni Pizza",
-  "description": "Classic pepperoni pizza with our signature sauce.",
-  "sizes": ["small", "medium", "large"],
-  "prices": { "small": 7.00, "medium": 10.00, "large": 12.95 },
-  "toppings": [
-    { "name": "extra cheese", "price": 2.00 },
-    { "name": "mushrooms", "price": 1.50 }
-  ]
-}
-…continue listing other relevant endpoints…
-
-Project Structure
-A high‐level look at key directories and files:
-
-graphql
-Copy
-pizza-order-bot/
-│
-├── backend/
-│   ├── app.py            # Main Flask application entry point
-│   ├── routes/           # API route definitions (e.g., auth.py, orders.py)
-│   ├── models/           # Database models (SQLAlchemy, etc.)
-│   ├── services/         # Business logic, external integrations
-│   ├── utils/            # Helper functions and utilities
-│   ├── tests/            # Unit and integration tests
-│   ├── requirements.txt  # Python dependencies
-│   └── .env.example      # Environment variable template
-│
-├── frontend/
-│   ├── public/
-│   │   └── index.html    # HTML template
-│   ├── src/
-│   │   ├── components/   # Reusable React/Vue components
-│   │   ├── pages/        # Top‐level pages/views
-│   │   ├── services/     # API client and utilities
-│   │   ├── App.js        # Main application component
-│   │   └── index.js      # Entry point for React/Vue
-│   ├── package.json      # Node.js dependencies & scripts
-│   └── .env.example      # Environment variable template
-│
-├── docker-compose.yml    # (Optional) Docker Compose configuration
-├── README.md             # This documentation file
-└── LICENSE               # License for the project
-Contributing
-Guidelines for contributing to the project:
-
-Fork the Repository
-
-Create a Feature Branch
-
-bash
-Copy
-git checkout -b feature/your-feature-name
-Commit Your Changes
-
-bash
-Copy
-git commit -m "Add <feature description>"
-Push to Your Fork
-
-bash
-Copy
-git push origin feature/your-feature-name
-Open a Pull Request
-
-Describe your changes in detail.
-
-Reference any relevant issues or tickets.
-
-Ensure all automated checks/tests pass.
-
-Code Style Guidelines
-
-Use consistent indentation (e.g., 2 spaces or 4 spaces).
-
-Follow the project’s linting rules (ESLint, flake8, etc.).
-
-Write clear, descriptive commit messages.
-
-Testing
-Describe how to run tests and what tools are used:
-
-Backend Tests (e.g., pytest)
-
-bash
-Copy
-cd backend
-pytest --cov=.
-Generates a coverage report and exits with nonzero status on failures.
-
-Frontend Tests (e.g., Jest for React, Mocha/Chai for Vue)
-
-bash
-Copy
-cd frontend
-npm test
-# or
-yarn test
-Runs unit tests and integration tests.
-
-Linting & Formatting
-
-bash
-Copy
-# Backend (Python)
-flake8 .
-black --check .
-
-# Frontend (JavaScript/TypeScript)
-npm run lint
-npm run format:check
-Deployment
-Outline steps to deploy to production or staging:
-
-Build Frontend for Production
-
-bash
-Copy
-cd frontend
-npm run build
-Outputs static assets in frontend/build/ (React) or frontend/dist/ (Vue).
-
-Push Backend to Production Server
-
-bash
-Copy
-cd backend
-git push origin main
-Ensure environment variables (.env) are correctly set on the server.
+1. Create and activate a virtual environment (recommended):
 
-Docker Deployment (Optional)
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   ```
 
-bash
-Copy
-docker-compose -f docker-compose.prod.yml up --build -d
-Uses a production‐ready Docker Compose file with optimized settings.
+2. Install Python dependencies:
 
-Cloud Provider Guidelines
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-AWS: EC2, ECS, or Elastic Beanstalk steps.
+3. Create a `.env` file in the project root with your OpenAI API key:
 
-Heroku: git push heroku main + config variables.
+   ```dotenv
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
 
-DigitalOcean: DigitalOcean App Platform or Droplet setup.
+   Make sure to replace `your_openai_api_key_here` with your actual key.
 
-Post‐Deployment Checks
+### 3. Frontend Setup (Node.js)
 
-Verify all services are running (pm2 status, docker ps, etc.).
+1. Install Node.js dependencies:
 
-Check application logs for errors.
+   ```bash
+   npm install
+   ```
 
-Smoke‐test critical user flows (login, place order, payment).
+   *(This installs Express listed in `package.json`.)*
 
-Troubleshooting
-Common issues and solutions:
+2. (Optional) If you don’t have a `package.json`, run:
 
-CORS Errors
+   ```bash
+   npm init -y
+   npm install express
+   ```
 
-Ensure both backend and frontend allow the correct origin(s).
+---
 
-For Flask:
+## Configuration
 
-python
-Copy
-from flask_cors import CORS
-app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
-For Express:
+* **Flask App (`orderbot.py`)**
 
-js
-Copy
-const cors = require("cors");
-app.use(cors({ origin: "http://localhost:3000" }));
-Port Conflicts
+  * Listens on port **5000** by default.
+  * Uses `python-dotenv` to load `OPENAI_API_KEY` from `.env`.
+  * Endpoints:
 
-If port 5000 is already in use:
+    * `POST /chat` – sends user messages to OpenAI and returns Bot responses.
+    * `GET /summary` – returns a JSON summary of the collected order.
+    * `POST /reset` – resets the conversation context to its initial system message.
 
-bash
-Copy
-lsof -i -P -n | grep 5000
-kill -9 <PID>
-Or change the port in app.py:
+* **Express Server (`server.js`)**
 
-python
-Copy
-app.run(host="0.0.0.0", port=5001)
-Database Connection Errors
+  * Serves static files (including `index.html`, CSS, JS) on port **3000**.
+  * No additional configuration is needed beyond having `index.html` in the same directory.
 
-Verify that DATABASE_URL (or individual DB_* variables) are correct.
+---
 
-Ensure the database server is running and accessible from your application host.
+## Usage
 
-“Module Not Found” or “ImportError”
+### Starting the Flask Server
 
-Double‐check that you installed dependencies (pip install -r requirements.txt or npm install).
+1. Activate your virtual environment (if not already active):
 
-Ensure your virtual environment is activated for Python.
+   ```bash
+   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   ```
 
-OpenAI Rate Limits / Authentication Failures
+2. Run the Flask app:
 
-Confirm your OPENAI_API_KEY is valid and unrestricted.
+   ```bash
+   python orderbot.py
+   ```
 
-Monitor usage in the OpenAI Dashboard for rate‐limit issues.
+   You should see:
 
-UI Doesn’t Load Styles or Assets
+   ```
+   * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+   ```
 
-Ensure server.js serves the correct directory (app.use(express.static(__dirname))).
+### Starting the Node Server
 
-Confirm paths in index.html for CSS/JS files are relative to the server’s root.
+In a separate terminal (no need for the Python virtual environment):
 
-Roadmap
-Outline planned features, improvements, and timelines:
+```bash
+node server.js
+```
 
-v1.1.0 (Q3 2025):
+You should see:
 
-Add multi‐language support (i18n).
+```
+Server running at http://localhost:3000
+Make sure the Python Flask server is also running at http://localhost:5000
+```
 
-Implement user profile avatars.
+### Interacting with the Bot
 
-Enable real‐time order tracking.
+1. Open your browser and navigate to:
 
-v1.2.0 (Q4 2025):
+   ```
+   http://localhost:3000/
+   ```
 
-Integrate payment gateway (Stripe, Razorpay).
+2. You’ll see the PizzaBot Assistant UI.
 
-Introduce coupon code functionality.
+   * The bot greets you automatically.
+   * Type your messages in the input field and click “Send” (or press Enter).
+   * The bot will collect your order item by item.
 
-Improve AI conversation flow with context‐aware prompts.
+3. **Get Order Summary**
 
-v2.0.0 (2026):
+   * Click the “Get Order Summary” button.
+   * A pane will appear showing a JSON object with:
 
-Launch mobile (iOS/Android) apps.
+     1. **pizza** (with size)
+     2. **toppings**
+     3. **drinks** (with size)
+     4. **sides** (with size)
+     5. **total price**
 
-Support voice‐activated ordering (speech recognition).
+4. **Reset Conversation**
 
-Add machine learning for personalized recommendations.
+   * Click “Reset Conversation” to clear the chat window and start over.
+   * The context is reset to the initial system prompt.
 
-License
-This project is licensed under the MIT License.
-Feel free to use, modify, and distribute.
+### Endpoints
 
-Contact
-Maintainer: Your Name
+* **`POST http://localhost:5000/chat`**
 
-Company/Organization: Your Organization Name
+  * **Request JSON**: `{ "message": "<user message>" }`
+  * **Response JSON**: `{ "response": "<bot reply>" }`
 
-Project Link: https://github.com/your-username/your-repo
+* **`GET http://localhost:5000/summary`**
 
-Issue Tracker: https://github.com/your-username/your-repo/issues
+  * **Response**: JSON summary of the complete order. If the LLM fails to produce valid JSON, returns `{ "summary": "<raw text>" }`.
 
-Thank you for using this project! If you find any bugs or have feature requests, please open an issue or submit a pull request.
+* **`POST http://localhost:5000/reset`**
 
+  * **Response**: `{ "status": "conversation reset" }`
 
+---
 
+## Environment Variables
 
+Ensure you have a `.env` file in the project root containing:
 
+```dotenv
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
+* **`OPENAI_API_KEY`**
+  Required to authenticate with OpenAI’s API for chat completions.
+
+---
+
+## Customization
+
+1. **Menu and Pricing**
+
+   * Modify the `context` variable in `orderbot.py` (the system prompt) to update menu items, prices, or add/remove toppings and sides.
+   * Example snippet from `orderbot.py`:
+
+     ```python
+     context = [{
+         'role': 'system',
+         'content': """
+         You are OrderBot, an automated service to collect orders for a pizza restaurant. 
+         … (existing instructions) …
+         The menu includes 
+         pepperoni pizza  12.95, 10.00, 7.00 
+         cheese pizza   10.95, 9.25, 6.50 
+         eggplant pizza   11.95, 9.75, 6.75 
+         fries 4.50, 3.50 
+         greek salad 7.25 
+         Toppings: 
+         extra cheese 2.00, 
+         mushrooms 1.50 
+         sausage 3.00 
+         canadian bacon 3.50 
+         AI sauce 1.50 
+         peppers 1.00 
+         Drinks: 
+         coke 3.00, 2.00, 1.00 
+         sprite 3.00, 2.00, 1.00 
+         bottled water 5.00 
+         """
+     }]
+     ```
+
+2. **Model Selection & Temperature**
+
+   * By default, the bot uses `gpt-3.5-turbo` with temperature `1` for creative responses.
+   * To switch to `gpt-4` (if enabled for your API key) or adjust temperature, update the `get_completion_from_messages` call:
+
+     ```python
+     def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=1):
+         response = client.chat.completions.create(
+             model=model,
+             messages=messages,
+             temperature=temperature,
+         )
+         return response.choices[0].message.content
+     ```
+
+3. **Frontend Styling**
+
+   * `index.html` uses [Tailwind CSS](https://tailwindcss.com/) for styling and Font Awesome for icons.
+   * Adjust classes or add your own CSS rules under `<style>` or link another stylesheet.
+
+---
+
+## Troubleshooting
+
+* **CORS Errors**
+
+  * Ensure the Flask server is running on `http://localhost:5000` and includes `CORS(app)`.
+  * Check that you’re calling `fetch('http://localhost:5000/chat', …)` exactly as shown.
+
+* **Environment Variable Not Found**
+
+  * Confirm that `.env` is in the same directory as `orderbot.py`.
+  * Run `echo $OPENAI_API_KEY` (or `printenv OPENAI_API_KEY` on Linux/macOS) to check if it’s set.
+  * If missing, reinstall `python-dotenv`:
+
+    ```bash
+    pip install python-dotenv
+    ```
+
+* **Port Conflicts**
+
+  * If port **5000** or **3000** is already in use, either stop the conflicting service or modify `orderbot.py`/`server.js` to listen on different ports.
+
+* **Invalid JSON Summary**
+
+  * Occasionally the LLM may produce non-JSON output. In that case, you’ll see a raw `{"summary": "…"}` response.
+  * Double-check that the system prompt for summary (in `get_summary`) is correct:
+
+    ```python
+    summary_message = {
+        'role': 'system',
+        'content': 'create a json summary of the previous food order. Itemize the price for each item. The fields should be 1) pizza, include size 2) list of toppings 3) list of drinks, include size 4) list of sides include size 5)total price'
+    }
+    ```
+
+---
+
+## Contributing
+
+1. Fork this repository.
+2. Create a new branch for your feature or bug fix:
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Make your changes and ensure the project still runs without errors.
+4. Commit your work:
+
+   ```bash
+   git commit -m "Add feature: describe what you added"
+   ```
+5. Push to your fork:
+
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+6. Open a Pull Request with a clear description of your changes.
+
+---
+
+## License
+
+This project is released under the [MIT License](LICENSE). Feel free to use, modify, and distribute.
+
+---
+
+> **Enjoy building and customizing your own LLM-based pizza ordering bot! 🍕🤖**
