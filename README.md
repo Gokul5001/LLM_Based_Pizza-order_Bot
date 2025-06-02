@@ -1,12 +1,13 @@
 ```markdown
 # Pizza Order Bot
 
+![image](https://github.com/user-attachments/assets/9fb8d441-e0bf-40d1-a6f2-e6bb03e779b3)
+
+
 This project implements a simple “Pizza Order Bot” web application. It consists of:
 
 - **Backend (Flask + OpenAI)**: A Python Flask server (`orderbot.py`) that uses the OpenAI API to handle conversational ordering logic, summarize orders, and reset the conversation.
 - **Frontend (Node/Express + HTML/CSS/JavaScript)**: A static HTML/CSS/JavaScript client (`index.html`) served via a lightweight Node/Express server (`server.js`) that provides a chat UI and interacts with the Flask backend.
-
----
 
 ## Table of Contents
 
